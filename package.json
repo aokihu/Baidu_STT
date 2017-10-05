@@ -1,0 +1,27 @@
+{
+  "name": "baidu-stt",
+  "version": "0.0.1",
+  "description": "Baidu Speech to Text",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/aokihu/Baidu_STT.git",
+    "type": "git"
+  },
+  "maintainers": [
+    "aokihu"
+  ],
+  "scripts": {
+    "test": "node ./test.js"
+  },
+  "engines": {
+    "node": ">7.0"
+  },
+  "author": "aokihu <aokihu@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^4.8.0"
+  },
+  "dependencies": {
+    "mic": "^2.1.2"
+  }
+}
