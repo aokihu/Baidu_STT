@@ -20,3 +20,7 @@ bdstt.on('upload', () => console.log('Uploading voice data...'));
 bdstt.on('success', data => {
   console.log(data);
 })
+
+bdstt.on('fail',err=> {
+  console.log(err)
+})

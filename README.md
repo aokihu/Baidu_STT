@@ -6,6 +6,9 @@ Latest Version: 1.0.0 [CHANGELOG](CHANGELOG.md)
 Hi, this project is aim to speech to text by baidu ai service, now, it's good for chinese
 you can also use it for English.
 
+Before you install the module, you must install `sox` on Mac OS X or Windows, or `aplay` on Linux
+and `alsa` on Linux
+
 * Install 
 
 you can use `npm`
@@ -47,7 +50,9 @@ bdstt.on('upload', () => console.log('Uploading voice data...'));
 
 bdstt.on('success', data => {
   console.log(data);
-})
+});
+
+bdstt.on('fail', err => console.log(err));
 ```
 
 * API
@@ -95,3 +100,6 @@ Upload voice date to service
 Success for recogniting your voice content, and return the result
 it is `array` type, because there may be many result. Normally the first result is better than other. I see ��
 
+**fail**
+
+When baidu can not recognting, it will return error message, it's `string` type.

@@ -162,6 +162,9 @@ class BaiduSTT extends EventEmitter {
 
         if(parsedData.err_no === 0){
           this.emit('success', parsedData.result);
+        }else
+        {
+          this.emit('fail', parsedData.err_msg);
         }
 
       });
