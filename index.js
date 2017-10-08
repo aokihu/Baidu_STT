@@ -21,10 +21,12 @@ class BaiduSTT extends EventEmitter {
    * @param {string} appId Baidu App ID, you can find it in baidu console
    * @param {string} apiKey App api key
    * @param {string} secretKey App secret key
+   * @param {string} language Choose your language, default is 'zh'
+   * @param {boolean} recordVoice Whether save the voice
    * @param {string} voicePath Voice saved path, default is current folder
    * @param {string} voiceType Voice type, default is 'wav'
    */
-  constructor({ appId, apiKey, secretKey, voicePath = './', voiceType = 'wav' }) {
+  constructor({ appId, apiKey, secretKey, language='zh', recordVoice = false,voicePath = './', voiceType = 'wav' }) {
     super();
 
     //
@@ -43,6 +45,9 @@ class BaiduSTT extends EventEmitter {
         size: 0,
         point: [],
       },
+      cuid: 'bdtts_client_' + Date.now(),
+      lan: language,
+      record: recordVoice
     };
 
     // Init mic
@@ -78,10 +83,14 @@ class BaiduSTT extends EventEmitter {
    * @description Listen for your voice
    */
   listen() {
-    const filename = `output.${this._.voiceType}`;
     const micStream = this.mic.getAudioStream();
-    const outputFileStream = fs.createWriteStream(path.resolve(this._.voicePath, filename));
-    micStream.pipe(outputFileStream);
+
+    if(this._.record){
+      const filename = `output.${this._.voiceType}`;
+      const outputFileStream = fs.createWriteStream(path.resolve(this._.voicePath, filename));
+      micStream.pipe(outputFileStream);
+    }
+
     micStream.on('startComplete', this._afterStart.bind(this));
     micStream.on('data', this._recording.bind(this));
     micStream.on('silence', this._afterRecord.bind(this));
@@ -125,7 +134,6 @@ class BaiduSTT extends EventEmitter {
       const buffer = Buffer.concat(this._.buffer.point, this._.buffer.size);
       console.log('Size', this._.buffer.size);
       this._uploadVoice(buffer);
-      this.emit('upload');
     }
   }
 
@@ -136,21 +144,36 @@ class BaiduSTT extends EventEmitter {
    * @description Upload voice date to baidu STT service
    */
   _uploadVoice(data) {
-    const options = new URL(`${BDServiceAPIUrl}?cuid=hjf9dsf9&token=${this._.token}`);
+
+    // construct request options
+    const options = {
+      protocol:'http:',
+      method:'POST',
+      hostname:'vop.baidu.com',
+      path:`/server_api?token=${this._.token}&cuid=${this._.cuid}&lan=${this._.lan}`
+    }
+
     const client = http.request(options, (res) => {
       res.setEncoding('utf8');
       let rawData = '';
       res.on('data', (chunk) => { rawData += chunk; });
       res.on('end', () => {
         const parsedData = JSON.parse(rawData);
-        console.log(parsedData);
+
+        if(parsedData.err_no === 0){
+          this.emit('success', parsedData.result);
+        }
+
       });
     });
 
     client.setHeader('Content-Type', 'audio/wav;rate=16000');
     client.write(data);
     client.end();
+
+    this.emit('upload');
   }
+
 }
 
 
