@@ -23,7 +23,7 @@ yarn add baidu_stt
 * How to use
 
 ```javascript
-const Baidu_STT = require('baidu_stt');
+const Baidu_STT = require('baidu-stt');
 
 const bdstt = new Baidu_STT({
   apiKey: '......',
