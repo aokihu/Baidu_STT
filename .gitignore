@@ -59,4 +59,4 @@ yarn-lock
 .env
 
 output.wav
-
+session.json
