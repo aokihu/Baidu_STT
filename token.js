@@ -13,40 +13,37 @@ const querystring = require('querystring');
 const got = require('./request.js');
 
 // Token url
-const AccessUrl = "http://openapi.baidu.com/oauth/2.0/token";
+const AccessUrl = 'http://openapi.baidu.com/oauth/2.0/token';
 const GRANT_TYPE = 'client_credentials';
 // Session file
-const SessionFile = path.resolve(__dirname ,"./session.json");
+const SessionFile = path.resolve(__dirname, './session.json');
 // Session Outdate
 const TokenDeadline = 12 * 3600 * 1000;
 
- class Token extends EventEmitter {
+class Token extends EventEmitter {
+  constructor({ apiKey, secretKey }) {
+    super();
 
-  constructor({apiKey, secretKey}){
-     super();
-
-     this.apiKey = apiKey;
-     this.secretKey = secretKey;
+    this.apiKey = apiKey;
+    this.secretKey = secretKey;
   }
 
   initToken() {
-
     return new Promise((resolve, reject) => {
       this.vaildToken()
-          .then(this.tokenReady.bind(this))
-          .catch(() => {
-            const params = {
-              grant_type:GRANT_TYPE,
-              client_id: this.apiKey,
-              client_secret:this.secretKey
-            };
+        .then(this.tokenReady.bind(this))
+        .catch(() => {
+          const params = {
+            grant_type: GRANT_TYPE,
+            client_id: this.apiKey,
+            client_secret: this.secretKey,
+          };
 
-            this.requestToken(params)
-              .then(this.tokenReady.bind(this))
-              .catch(reject);
-          });
-
-    })
+          this.requestToken(params)
+            .then(this.tokenReady.bind(this))
+            .catch(reject);
+        });
+    });
   }
 
   tokenReady(token) {
@@ -54,7 +51,7 @@ const TokenDeadline = 12 * 3600 * 1000;
   }
   vaildToken() {
     return new Promise((resolve, reject) => {
-      fs.access(SessionFile, fs.R_OK, err => {
+      fs.access(SessionFile, fs.R_OK, (err) => {
         if (err) {
           // TODO: 如果没有Session文件，那么返回false
           reject();
@@ -70,14 +67,13 @@ const TokenDeadline = 12 * 3600 * 1000;
 
   requestToken(params) {
     // 从百度获取token session
-    const _url = AccessUrl + "?" + querystring.stringify(params);
+    const _url = `${AccessUrl}?${querystring.stringify(params)}`;
     return got(_url)
-    .then(body => {
-      const { access_token: token } = JSON.parse(body);
-      return this.saveToken(token)
-    })
-    .catch(console.error);
-
+      .then((body) => {
+        const { access_token: token } = JSON.parse(body);
+        return this.saveToken(token);
+      })
+      .catch(console.error);
   }
 
   saveToken(token) {
@@ -85,18 +81,17 @@ const TokenDeadline = 12 * 3600 * 1000;
       fs.writeFile(
         SessionFile,
         JSON.stringify({ token, timestamp: new Date() }),
-        err => {
+        (err) => {
           if (err) {
             reject(err);
           } else {
             resolve(token);
           }
-        }
+        },
       );
     });
   }
+}
 
- }
 
-
- module.exports = Token;
+module.exports = Token;
