@@ -144,6 +144,7 @@ class BaiduSTT extends EventEmitter {
     }else{
       this._.buffer.point = [];
       this._.buffer.size = 0;
+      this.emit('timeout');
     }
 
     this.emit('listening');
@@ -220,7 +221,9 @@ class BaiduSTT extends EventEmitter {
 
     if(this._.continual)
     {
-      this.mic.resume();
+      setTimeout(()=>{
+        this.mic.resume();
+      }, 1000)
     }
   }
 

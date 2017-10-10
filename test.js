@@ -18,9 +18,10 @@ bdstt.on('ready', () => {
 });
 
 bdstt.on('start', () => console.log('Please speak something, I\'m listening...'));
-bdstt.on('listening', () => console.log('I\'m listen'));
+// bdstt.on('listening', () => console.log('I\'m listen'));
 bdstt.on('stop', () => console.log('Copy that'));
 bdstt.on('upload', () => console.log('Uploading voice data...'));
+bdstt.on('timeout', () => console.log('TimeOUT'))
 
 bdstt.on('success', data => {
   console.log(data);
