@@ -1,7 +1,7 @@
 CHANGE LOG
 ===========
 
-* Version 1.0.35
+* Version 1.0.4
 
 Add new construct param `continual`, if it is `true` it will continual recording, if is `false` it will stop after upload voice data
 
