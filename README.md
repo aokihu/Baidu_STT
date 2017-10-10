@@ -1,12 +1,12 @@
 Baidu Speech to Text
 =====================
 
-Latest Version: 1.0.0 [CHANGELOG](CHANGELOG.md)
+Latest Version: 1.0.2 [CHANGELOG](CHANGELOG.md)
 
 Hi, this project is aim to speech to text by baidu ai service, now, it's good for chinese
 you can also use it for English.
 
-Before you install the module, you must install `sox` on Mac OS X or Windows, or `aplay` on Linux
+Before you install the module, you must install `sox` on Mac OS X or Windows, or `arecord` on Linux
 and `alsa` on Linux
 
 * Install 
@@ -32,6 +32,7 @@ const bdstt = new Baidu_STT({
   apiKey: '......',
   secertKey: '......',
   language: 'zh',
+  voiceRate: '8000',
   voiceType: 'wav',
   voicePath: './',
   voiceReacod: false
@@ -66,6 +67,7 @@ Return an Baidu_STT object instance
   - secretKey *{string}* App secret key
   - language *{stirng}* Choose your language, default is `'zh'`, you can choose `'en'` for `English`
   - recordVoice *{boolean}* Whether save the voice on your disk, default is `false`
+  - voiceRate *{string}* The rate of voice record, default is `'8000'`, you can set `'16000'` or any vaild vaule in `sox` OR `arecord`
   - voicePath *{string}* The path of saved voice, default is `./`
   - voiceType *{string}* The type of recod voice file, default is `wav`
 

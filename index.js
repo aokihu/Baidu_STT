@@ -3,7 +3,7 @@
  * @author aokihu aokihu@gmail.com
  * @github https://github.com/aokihu/Baidu_STT
  * @license MIT
- * @version 0.0.1
+ * @version 1.0
  */
 const { URL } = require('url');
 const http = require('http');
@@ -26,7 +26,15 @@ class BaiduSTT extends EventEmitter {
    * @param {string} voicePath Voice saved path, default is current folder
    * @param {string} voiceType Voice type, default is 'wav'
    */
-  constructor({ appId, apiKey, secretKey, language='zh', recordVoice = false,voicePath = './', voiceType = 'wav' }) {
+  constructor({
+    appId,
+    apiKey,
+    secretKey,
+    language='zh',
+    recordVoice = false,
+    voicePath = './',
+    voiceRate = '8000',
+    voiceType = 'wav' }) {
     super();
 
     //
@@ -35,6 +43,7 @@ class BaiduSTT extends EventEmitter {
     this._ = {
       token: '', /* Baidu service session token */
       status: 'none', /* the status of class, [none, ready, requesting] */
+      voiceRate, /* the voice record rate */
       voicePath, /* the voice saved path */
       voiceType, /* the voice saved file type, default is 'pcm' */
       apiKey, /* Baidu service app key, you should fetch it from your baidu console */
@@ -52,7 +61,7 @@ class BaiduSTT extends EventEmitter {
 
     // Init mic
     this.mic = Mic({
-      rate: '16000',
+      rate: this._.voiceRate,
       channels: 1,
       debug: false,
       exitOnSilence: 3,
@@ -132,7 +141,6 @@ class BaiduSTT extends EventEmitter {
       this.emit('stop');
 
       const buffer = Buffer.concat(this._.buffer.point, this._.buffer.size);
-      console.log('Size', this._.buffer.size);
       this._uploadVoice(buffer);
     }
   }
