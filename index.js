@@ -33,7 +33,7 @@ class BaiduSTT extends EventEmitter {
     language='zh',
     recordVoice = false,
     voicePath = './',
-    voiceRate = '8000',
+    voiceRate = '16000',
     voiceType = 'wav' }) {
     super();
 

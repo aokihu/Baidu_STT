@@ -1,7 +1,7 @@
 CHANGE LOG
 ===========
 
-* Version 1.0.2
+* Version 1.0.3
 
 Add new construct param `voiceRate`, you can change the rate by yourself, default is `'8000'`, ***ATTATION*** the param's type is `***STRING***`
 
