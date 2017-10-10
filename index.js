@@ -13,6 +13,7 @@ const EventEmitter = require('events');
 const Token = require('./token.js');
 const Mic = require('mic');
 
+const MAX_BUFFER_SIZE = 8192 * 32;
 const BDServiceAPIUrl = 'http://vop.baidu.com/server_api/';
 
 class BaiduSTT extends EventEmitter {
@@ -23,6 +24,8 @@ class BaiduSTT extends EventEmitter {
    * @param {string} secretKey App secret key
    * @param {string} language Choose your language, default is 'zh'
    * @param {boolean} recordVoice Whether save the voice
+   * @param {boolean} continual If is 'true' it will pause, 'false' is stop recording
+   * @param {stirng} voiceRate Recoding voice rate, you can set '16000' OR '8000', but '16000' maybe is the only rate with my test
    * @param {string} voicePath Voice saved path, default is current folder
    * @param {string} voiceType Voice type, default is 'wav'
    */
@@ -32,6 +35,7 @@ class BaiduSTT extends EventEmitter {
     secretKey,
     language='zh',
     recordVoice = false,
+    continual = false,
     voicePath = './',
     voiceRate = '16000',
     voiceType = 'wav' }) {
@@ -49,6 +53,7 @@ class BaiduSTT extends EventEmitter {
       apiKey, /* Baidu service app key, you should fetch it from your baidu console */
       secretKey, /* Baidu service app secret key, you should fetch it from your baidu console */
       appId, /* It's options */
+      continual, /* PAUSE OR STOP after recording */
       canStop: false, /* It can stop record */
       buffer: {
         size: 0,
@@ -101,9 +106,12 @@ class BaiduSTT extends EventEmitter {
     }
 
     micStream.on('startComplete', this._afterStart.bind(this));
+    micStream.on('resumeComplete', this._afterStart.bind(this));
     micStream.on('data', this._recording.bind(this));
     micStream.on('silence', this._afterRecord.bind(this));
+
     this.mic.start();
+
   }
 
 
@@ -125,8 +133,19 @@ class BaiduSTT extends EventEmitter {
    * @description Allocate memory and save voice data
    */
   _recording(data) {
-    this._.buffer.size += data.byteLength;
-    this._.buffer.point.push(data);
+
+    // Check buffer size
+    // if size is lager than MAX_BUFFER_SIZE
+    // free buffer and set buffer size to zero
+    if(MAX_BUFFER_SIZE > this._.buffer.size)
+    {
+      this._.buffer.size += data.byteLength;
+      this._.buffer.point.push(data);
+    }else{
+      this._.buffer.point = [];
+      this._.buffer.size = 0;
+    }
+
     this.emit('listening');
   }
 
@@ -135,14 +154,29 @@ class BaiduSTT extends EventEmitter {
    * @function do something after record
    */
   _afterRecord() {
+
     if (this._.canStop) {
-      this.mic.stop();
-      this._.canStop = false;
-      this.emit('stop');
+      if(this._.continual){
+        this.mic.pause()
+        this._.status = 'pause';
+        this._.canStop = true;
+      }else{
+        this.mic.stop();
+        this._.status = 'stop';
+        this._.canStop = false;
+      }
 
       const buffer = Buffer.concat(this._.buffer.point, this._.buffer.size);
+
+      this.emit('stop');
+
       this._uploadVoice(buffer);
+
+      // Free buffer
+      this._.buffer.point = [];
+      this._.buffer.size = 0;
     }
+
   }
 
   /**
@@ -178,11 +212,16 @@ class BaiduSTT extends EventEmitter {
       });
     });
 
-    client.setHeader('Content-Type', 'audio/wav;rate=16000');
+    client.setHeader('Content-Type', 'audio/wav;rate='+this._.voiceRate);
     client.write(data);
     client.end();
 
     this.emit('upload');
+
+    if(this._.continual)
+    {
+      this.mic.resume();
+    }
   }
 
 }

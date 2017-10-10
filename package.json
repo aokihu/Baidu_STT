@@ -1,6 +1,6 @@
 {
-  "name": "baidu-stt",
-  "version": "1.0.3",
+  "name": "baidu-tt",
+  "version": "1.0.35",
   "description": "Baidu Speech to Text",
   "main": "index.js",
   "repository": {

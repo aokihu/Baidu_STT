@@ -1,7 +1,7 @@
 Baidu Speech to Text
 =====================
 
-Latest Version: 1.0.3 [CHANGELOG](CHANGELOG.md)
+Latest Version: 1.0.35 [CHANGELOG](CHANGELOG.md)
 
 Hi, this project is aim to speech to text by baidu ai service, now, it's good for chinese
 you can also use it for English.
@@ -35,6 +35,7 @@ const bdstt = new Baidu_STT({
   voiceRate: '8000',
   voiceType: 'wav',
   voicePath: './',
+  continual: false,
   voiceReacod: false
 })
 
@@ -66,6 +67,7 @@ Return an Baidu_STT object instance
   - apiKey *{string}* App api key
   - secretKey *{string}* App secret key
   - language *{stirng}* Choose your language, default is `'zh'`, you can choose `'en'` for `English`
+  - continual *{string}* Continue to recoding after uploading voice data, if `true` it will be contunal
   - recordVoice *{boolean}* Whether save the voice on your disk, default is `false`
   - voiceRate *{string}* The rate of voice record, default is `'16000'`, you can set `'8000'` or any vaild vaule in `sox` OR `arecord`
   - voicePath *{string}* The path of saved voice, default is `./`
