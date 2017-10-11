@@ -12,6 +12,7 @@ const fs = require('fs');
 const EventEmitter = require('events');
 const Token = require('./token.js');
 const Mic = require('mic');
+const fetch = require('little-fetch')
 
 const MAX_BUFFER_SIZE = 8192 * 32;
 const BDServiceAPIUrl = 'http://vop.baidu.com/server_api/';
@@ -188,34 +189,27 @@ class BaiduSTT extends EventEmitter {
    */
   _uploadVoice(data) {
 
-    // construct request options
-    const options = {
-      protocol:'http:',
-      method:'POST',
-      hostname:'vop.baidu.com',
-      path:`/server_api?token=${this._.token}&cuid=${this._.cuid}&lan=${this._.lan}`
-    }
+    const url = `http://vop.baidu.com/server_api?token=${this._.token}&cuid=${this._.cuid}&lan=${this._.lan}`;
 
-    const client = http.request(options, (res) => {
-      res.setEncoding('utf8');
-      let rawData = '';
-      res.on('data', (chunk) => { rawData += chunk; });
-      res.on('end', () => {
-        const parsedData = JSON.parse(rawData);
+    fetch({
+      url,
+      method: 'POST',
+      headers: {
+        'Content-Type':`audio/wav;rate=${this._.voiceRate}`
+      },
+      postData:data
+    })
+    .then(data => {
+      const parsedData = JSON.parse(data);
+      if(parsedData.err_no === 0){
+        this.emit('success', parsedData.result);
+      }else
+      {
+        this.emit('fail', parsedData.err_msg);
+      }
+    })
+    .catch(console.log)
 
-        if(parsedData.err_no === 0){
-          this.emit('success', parsedData.result);
-        }else
-        {
-          this.emit('fail', parsedData.err_msg);
-        }
-
-      });
-    });
-
-    client.setHeader('Content-Type', 'audio/wav;rate='+this._.voiceRate);
-    client.write(data);
-    client.end();
 
     this.emit('upload');
 

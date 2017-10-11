@@ -1,6 +1,6 @@
 {
   "name": "baidu-stt",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Baidu Speech to Text",
   "main": "index.js",
   "repository": {
@@ -22,6 +22,7 @@
     "eslint": "^4.8.0"
   },
   "dependencies": {
+    "little-fetch": "^1.0.0",
     "mic": "^2.1.2"
   }
 }
