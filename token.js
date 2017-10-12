@@ -89,7 +89,7 @@ class Token extends EventEmitter {
           } else {
             resolve(token);
           }
-        },
+        }
       );
     });
   }

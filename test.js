@@ -21,6 +21,7 @@ bdstt.on('start', () => console.log('Please speak something, I\'m listening...')
 bdstt.on('stop', () => console.log('Copy that'));
 bdstt.on('upload', () => console.log('Uploading voice data...'));
 bdstt.on('timeout', () => console.log('TimeOUT'))
+bdstt.on('wake', (hotword) => console.log('等待你的命令', hotword))
 
 bdstt.on('success', data => {
   console.log(data);

@@ -1,6 +1,6 @@
 {
   "name": "baidu-stt",
-  "version": "1.0.5",
+  "version": "1.0.8",
   "description": "Baidu Speech to Text",
   "main": "index.js",
   "repository": {
@@ -13,9 +13,6 @@
   "scripts": {
     "test": "node ./test.js"
   },
-  "engines": {
-    "node": ">7.0"
-  },
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",
   "devDependencies": {
@@ -23,6 +20,8 @@
   },
   "dependencies": {
     "little-fetch": "^1.0.0",
-    "mic": "^2.1.2"
+    "mic": "^2.1.2",
+    "node-record-lpcm16": "^0.3.0",
+    "snowboy": "^1.2.0"
   }
 }
