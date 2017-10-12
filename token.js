@@ -10,8 +10,7 @@ const fs = require('fs');
 const EventEmitter = require('events');
 const path = require('path');
 const querystring = require('querystring');
-// const got = require('./request.js');
-const got = require('little-fetch')
+const got = require('little-fetch');
 
 // Token url
 const AccessUrl = 'http://openapi.baidu.com/oauth/2.0/token';
@@ -60,7 +59,7 @@ class Token extends EventEmitter {
           // TODO: 如果有Session文件，然后检查是否已经过期
           const { token, timestamp } = JSON.parse(fs.readFileSync(SessionFile));
           const delta = new Date() - new Date(timestamp);
-          delta > TokenDeadline ? reject() : resolve(token);
+          delta > TokenDeadline && !!token ? reject() : resolve(token);
         }
       });
     });
@@ -69,8 +68,8 @@ class Token extends EventEmitter {
   requestToken(params) {
     // 从百度获取token session
     const url = `${AccessUrl}?${querystring.stringify(params)}`;
-    console.log(url)
-    return got({url})
+    console.log(url);
+    return got({ url })
       .then((body) => {
         const { access_token: token } = JSON.parse(body);
         return this.saveToken(token);
@@ -89,7 +88,7 @@ class Token extends EventEmitter {
           } else {
             resolve(token);
           }
-        },
+        }
       );
     });
   }
@@ -100,7 +99,6 @@ class Token extends EventEmitter {
    * @description Delete token session file
    */
   clearToken() {
-
   }
 }
 

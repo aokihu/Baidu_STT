@@ -12,6 +12,8 @@ const fs = require('fs');
 const EventEmitter = require('events');
 const Token = require('./token.js');
 const Mic = require('mic');
+const Detector = require('snowboy').Detector;
+const Models = require('snowboy').Models;
 const fetch = require('little-fetch')
 
 const MAX_BUFFER_SIZE = 8192 * 32;
@@ -25,6 +27,7 @@ class BaiduSTT extends EventEmitter {
    * @param {string} secretKey App secret key
    * @param {string} language Choose your language, default is 'zh'
    * @param {boolean} recordVoice Whether save the voice
+   * @param {string} hotword Hot word
    * @param {boolean} continual If is 'true' it will pause, 'false' is stop recording
    * @param {stirng} voiceRate Recoding voice rate, you can set '16000' OR '8000', but '16000' maybe is the only rate with my test
    * @param {string} voicePath Voice saved path, default is current folder
@@ -64,6 +67,11 @@ class BaiduSTT extends EventEmitter {
       lan: language,
       record: recordVoice
     };
+
+    // Snowboy Model
+    this.mode = new Models();
+
+    
 
     // Init mic
     this.mic = Mic({
