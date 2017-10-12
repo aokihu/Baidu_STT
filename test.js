@@ -7,7 +7,9 @@ const BaiduSTT = require('./index.js');
 const bdstt = new BaiduSTT({
   apiKey: 'DAZTeCYAkuAQwtPvWDcBb9Ih',
   secretKey: 'adb28deb5103bde96bd9633dd437ff2d',
-  voiceRate: '8000'
+  voiceRate: '16000',
+  sensitivity: 2,
+  gain: 0.4
  });
 
 bdstt.init();
@@ -17,7 +19,7 @@ bdstt.on('ready', () => {
 });
 
 bdstt.on('start', () => console.log('Please speak something, I\'m listening...'));
-// bdstt.on('listening', () => console.log('I\'m listen'));
+// bdstt.on('listening' () => console.log('I\'m listen'));
 bdstt.on('stop', () => console.log('Copy that'));
 bdstt.on('upload', () => console.log('Uploading voice data...'));
 bdstt.on('timeout', () => console.log('TimeOUT'))

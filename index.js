@@ -105,6 +105,7 @@ class BaiduSTT extends EventEmitter {
 
     // Process snowboy events
     this.detector.on('silence', this._silence.bind(this));
+    this.detector.on('sound', console.log)
     this.detector.on('hotword',this._hotword.bind(this));
     this.detector.on('error', err => this.emit('error', err));
 
@@ -149,7 +150,10 @@ class BaiduSTT extends EventEmitter {
       const outputFileStream = fs.createWriteStream(path.resolve(this._.voicePath, filename));
       micStream.pipe(outputFileStream);
     }
-    micStream.on('data', this._sound.bind(this));
+    setTimeout(() => {
+      micStream.on('data', this._sound.bind(this));
+    },1000)
+
     this.mic.start();
 
     // Set status to sleep
@@ -166,18 +170,6 @@ class BaiduSTT extends EventEmitter {
     this._.status = STATUS_READY;
   }
 
-
-  /**
-   * @private
-   * @function _afterStart()
-   * @description it will delay 3s to stop record
-   */
-  _afterStart() {
-    this.emit('start');
-    this.emit('begin');
-    setTimeout(() => { this._.canStop = true; }, 3000);
-  }
-
   /**
    * @private
    * @function _recording(data)
@@ -187,7 +179,6 @@ class BaiduSTT extends EventEmitter {
   _sound(data) {
 
     if(this._.status === STATUS_WAKE){
-
       // Check buffer size
       // if size is lager than MAX_BUFFER_SIZE
       // free buffer and set buffer size to zero
@@ -201,6 +192,7 @@ class BaiduSTT extends EventEmitter {
         this.emit('timeout');
         this._.status = STATUS_SLEEP;
       }
+
     }
 
   }
@@ -210,7 +202,7 @@ class BaiduSTT extends EventEmitter {
    * @function do something after record
    */
   _hotword(index,hotword,buffer) {
-    console.log('STATUS', this._.status);
+
     if(this._.status === STATUS_SLEEP){
       this.emit('wake', hotword);
       this._.status = STATUS_WAKE;
