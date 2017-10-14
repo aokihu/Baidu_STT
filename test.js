@@ -10,9 +10,9 @@ const bdstt = new BaiduSTT({
   voiceRate: '16000',
   // debug:true,
   continual: true,
-  sensitivity: "0.32",
-  modelFile:'./resources/Higelx.pmdl',
-  hotwords:'海格立斯'
+  sensitivity: "0.4",
+  modelFile:'./resources/Alexa.pmdl',
+  hotwords:'Alexa'
  });
 
 bdstt.init();

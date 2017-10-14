@@ -1,7 +1,11 @@
 Baidu Speech to Text
 =====================
 
-Latest Version: 1.0.4 [CHANGELOG](CHANGELOG.md)
+Latest Version: 2.0.0 [CHANGELOG](CHANGELOG.md)
+
+**BIG CHANGE**
+
+Because I use snowboy to support hot word, so it is only running on Nodejs 6.0.
 
 Hi, this project is aim to speech to text by baidu ai service, now, it's good for chinese
 you can also use it for English.
@@ -86,6 +90,14 @@ Set instance listen for your voice.
 **start**
 
 Start record voice after you call `listen()`
+
+**wakeup**
+
+Be waked up by hot word
+
+**sleep**
+
+After upload voice data, it is going to sleep status
 
 **listening**
 

@@ -3,7 +3,7 @@
  * @author aokihu aokihu@gmail.com
  * @github https://github.com/aokihu/Baidu_STT
  * @license MIT
- * @version 1.0.10
+ * @version 2.0.0
  */
 const http = require('http');
 const path = require('path');
@@ -27,6 +27,7 @@ const STAT_SLEEP = 2;
 const STAT_WAKE_UP = 3;
 const STAT_LISTENING = 4;
 const STAT_UPLOAD = 5;
+const STAT_PEND_UPLOAD = 6;
 
 /**
  * @class BaiduSTT
@@ -107,7 +108,7 @@ class BaiduSTT extends EventEmitter {
         sensitivity: this._.sensitivity,
         hotwords : this._.hotwords
       });
-    
+
       // Snowboy Detector
       this.detector = new Detector({
         resource: "./resources/common.res",
@@ -117,7 +118,7 @@ class BaiduSTT extends EventEmitter {
 
       this._.exitOnSilence = 0;
     }
-  
+
     // Init mic
     this.mic = Mic({
       rate: this._.voiceRate,
@@ -174,7 +175,7 @@ class BaiduSTT extends EventEmitter {
       micStream.on('silence', this._afterRecord.bind(this));
       this._.status = STAT_LISTENING;
     }
-    
+
     // start recording
     this.mic.start();
   }
@@ -194,14 +195,14 @@ class BaiduSTT extends EventEmitter {
   /**
    * @private
    * @function _wakeup
-   * @param {number} index 
-   * @param {string} hotword 
-   * @param {Buffer} buffer 
+   * @param {number} index
+   * @param {string} hotword
+   * @param {Buffer} buffer
    */
   _wakeup(index, hotword, buffer){
-    console.log('WAKEUP')
     this.emit('wakeup', hotword);
-    setTimeout(() => { this._.canStop = true; }, this._.silenceDelay); 
+    this._.status = STAT_LISTENING;
+    setTimeout(() => { this._.canStop = true; }, this._.silenceDelay);
   }
 
   /**
@@ -244,7 +245,9 @@ class BaiduSTT extends EventEmitter {
    * @param {Buffer} buffer voice buffer data
    */
   _listening(buffer){
-    console.log('SOUND')
+    if(this._.status === STAT_LISTENING){
+      this._recording(buffer);
+    }
   }
 
   /**
@@ -253,22 +256,28 @@ class BaiduSTT extends EventEmitter {
    */
   _afterRecord() {
 
-    console.log('SILENCE')
-
     if (this._.canStop) {
       if(this._.continual){
-        
-      }else{
+        if(this._.status === STAT_LISTENING){
+          this._.status = STAT_PEND_UPLOAD;
+        } else {
+          return 0;
+        }
+      }
+      else{
         this.mic.stop();
-        this._.status = 'stop';
-        this._.canStop = false;
+        this._.status = STAT_SLEEP;
+        this.emit('stop');
       }
 
       const buffer = Buffer.concat(this._.buffer.point, this._.buffer.size);
 
-      this.emit('stop');
+      if(this._.buffer.size > 8192 * 5)
+      {
+        this._uploadVoice(buffer);
+      }
 
-      this._uploadVoice(buffer);
+      this._.canStop = false;
 
       // Free buffer
       this._.buffer.point = [];
@@ -303,18 +312,19 @@ class BaiduSTT extends EventEmitter {
       {
         this.emit('fail', parsedData.err_msg);
       }
+
+      // Set status to SLEEP
+      if(this._.continual)
+      {
+        this._.status = STAT_SLEEP;
+        this.emit('sleep');
+      }
+
     })
     .catch(console.log)
 
-
     this.emit('upload');
 
-    if(this._.continual)
-    {
-      setTimeout(()=>{
-        this.mic.resume();
-      }, 1000)
-    }
   }
 
 }
