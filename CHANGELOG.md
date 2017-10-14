@@ -1,6 +1,10 @@
 CHANGE LOG
 ===========
 
+* Version 2.0.1
+
+Just update README
+
 * Version 2.0.0
 
 **BREAK CHANGE**
