@@ -14,7 +14,8 @@ const Mic = require('mic');
 const {Detector,Models} = require('snowboy');
 const fetch = require('little-fetch')
 
-const MAX_BUFFER_SIZE = 8192 * 32;
+const MAX_BUFFER_BLOCK_NUMBER = 32;
+const MAX_BUFFER_SIZE = 8192 * MAX_BUFFER_BLOCK_NUMBER;
 const BDServiceAPIUrl = 'http://vop.baidu.com/server_api/';
 
 /**
