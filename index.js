@@ -11,8 +11,7 @@ const fs = require('fs');
 const EventEmitter = require('events');
 const Token = require('./token.js');
 const Mic = require('mic');
-const Detector = require('snowboy').Detector;
-const Models = require('snowboy').Models;
+const {Detector,Models} = require('snowboy');
 const fetch = require('little-fetch')
 
 const MAX_BUFFER_SIZE = 8192 * 32;
