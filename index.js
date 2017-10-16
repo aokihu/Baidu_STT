@@ -3,7 +3,7 @@
  * @author aokihu aokihu@gmail.com
  * @github https://github.com/aokihu/Baidu_STT
  * @license MIT
- * @version 2.0.1
+ * @version 2.0.2
  */
 const http = require('http');
 const path = require('path');

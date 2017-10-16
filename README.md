@@ -1,7 +1,7 @@
 Baidu Speech to Text
 =====================
 
-Latest Version: 2.0.1 [CHANGELOG](CHANGELOG.md)
+Latest Version: 2.0.2 [CHANGELOG](CHANGELOG.md)
 
 Hi, this project is aim to speech to text by baidu ai service, now, it's good for chinese
 you can also use it for English.
