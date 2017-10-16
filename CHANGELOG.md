@@ -1,6 +1,13 @@
 CHANGE LOG
 ===========
 
+* Version 2.0.2
+
+Add 3 function
+> stop()
+> pause()
+> resume()
+
 * Version 2.0.1
 
 Just update README
