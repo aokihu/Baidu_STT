@@ -125,11 +125,24 @@ Return an Baidu_STT object instance
 
 **instance.init()**
 
-Request token then emit `ready` event.
+Request token then emit `ready` event;
 
 **instance.listen()**
 
-Set instance listen for your voice.
+Set instance listen for your voice;
+
+**instance.pause()**
+
+When you set contiunal is `true`, you can use this fucntion pause record sound;
+
+**instance.resume()**
+
+When you set continual is `true` and paused, you can use it to resume;
+
+**instance.stop()**
+
+Stop recording.
+
 
 # Event
 

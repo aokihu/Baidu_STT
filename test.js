@@ -1,5 +1,6 @@
 /**
  * Test file
+ * @version 2.0.1
  */
 
 const BaiduSTT = require('./index.js');

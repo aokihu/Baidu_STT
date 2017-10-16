@@ -181,6 +181,35 @@ class BaiduSTT extends EventEmitter {
   }
 
   /**
+   * @public
+   * @function pause()
+   * @description Pause mic record
+   */
+  pause(){
+    this.mic.pause();
+  }
+
+  /**
+   * @public
+   * @function resume()
+   * @description Resume mic record
+   */
+  resume(){
+    this.mic.resume();
+  }
+
+  /**
+   * @public
+   * @function stop()
+   * @description Stop mic record
+   */
+  stop() {
+    this.mic.stop();
+    this._.buffer.point = [];
+    this._.buffer.size = 0;
+  }
+
+  /**
    * @private
    * @function _recordToFile()
    * @param {Stream} inputStream mic stream
