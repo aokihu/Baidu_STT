@@ -1,7 +1,7 @@
 {
   "name": "baidu-stt",
-  "version": "2.0.2",
-  "description": "Baidu Speech to Text",
+  "version": "2.0.3",
+  "description": "Chinese speech to text with Baidu service",
   "main": "index.js",
   "repository": {
     "url": "https://github.com/aokihu/Baidu_STT.git",
@@ -18,6 +18,14 @@
   },
   "author": "aokihu <aokihu@gmail.com>",
   "license": "MIT",
+  "bugs": {
+    "email": "aokihu@gmail.com",
+    "url": "https://github.com/aokihu/Baidu_STT/issues"
+  },
+  "keywords": [
+    "STT","stt","speak to text","speech to text","语音转文字",
+    "语音识别","baidu","AI","中文语音识别","chinese speech to text"
+  ],
   "devDependencies": {
     "eslint": "^4.8.0"
   },

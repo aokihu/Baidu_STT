@@ -3,17 +3,19 @@
  * @author aokihu aokihu@gmail.com
  * @github https://github.com/aokihu/Baidu_STT
  * @license MIT
- * @version 2.0.2
+ * @version 2.0.3
  */
+
+const EventEmitter = require('events');
 const http = require('http');
 const path = require('path');
 const fs = require('fs');
-const EventEmitter = require('events');
-const Token = require('./token.js');
 const Mic = require('mic');
 const {Detector,Models} = require('snowboy');
 const fetch = require('little-fetch')
+const Token = require('./token.js');
 
+const MIN_REACORD_FRAME_BLOCK = 3;
 const MAX_BUFFER_BLOCK_NUMBER = 32;
 const MAX_BUFFER_SIZE = 8192 * MAX_BUFFER_BLOCK_NUMBER;
 const BDServiceAPIUrl = 'http://vop.baidu.com/server_api/';
@@ -67,6 +69,8 @@ class BaiduSTT extends EventEmitter {
     voicePath = './',
     voiceRate = '16000',
     voiceType = 'wav' }) {
+
+    // Call parent constrcutor function
     super();
 
     //
@@ -301,7 +305,7 @@ class BaiduSTT extends EventEmitter {
 
       const buffer = Buffer.concat(this._.buffer.point, this._.buffer.size);
 
-      if(this._.buffer.size > 8192 * 5)
+      if(this._.buffer.size > 8192 * MIN_REACORD_FRAME_BLOCK)
       {
         this._uploadVoice(buffer);
       }
