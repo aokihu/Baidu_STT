@@ -165,7 +165,7 @@ class BaiduSTT extends EventEmitter {
       this._recordToFile(micStream);
     }
 
-    // Set snowboy to listen hot word
+    // Set snowboy to listen hot wod
     if(this._.continual){
       this.detector.on('hotword', this._wakeup.bind(this));
       this.detector.on('sound', this._listening.bind(this));
@@ -268,6 +268,7 @@ class BaiduSTT extends EventEmitter {
       this._.buffer.point = [];
       this._.buffer.size = 0;
       this.emit('timeout');
+      this._.status = STAT_SLEEP;
     }
 
     this.emit('listening');
